@@ -1,0 +1,84 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Nome do Data Factory",
+			"defaultValue": "adf-trilha-compass"
+		},
+		"lsAzureSQL_password": {
+			"type": "secureString",
+			"metadata": "Cadeia segura para \"password\" de \"lsAzureSQL\""
+		},
+		"lsdatalake_accountKey": {
+			"type": "secureString",
+			"metadata": "Cadeia segura para \"accountKey\" de \"lsdatalake\""
+		},
+		"lsAzureSQL_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "sql-trilha.database.windows.net"
+		},
+		"lsAzureSQL_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "sqldb-trilha"
+		},
+		"lsAzureSQL_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "leonardo"
+		},
+		"lsdatalake_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://dlstrilhacompass.dfs.core.windows.net/"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI para conta de armazenamento contendo os modelos ARM ligados"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Token sas para conta de armazenamento contendo os modelos ARM ligados"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "adf-trilha-compass_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"lsAzureSQL_password": {
+						"value": "[parameters('lsAzureSQL_password')]"
+					},
+					"lsdatalake_accountKey": {
+						"value": "[parameters('lsdatalake_accountKey')]"
+					},
+					"lsAzureSQL_properties_typeProperties_server": {
+						"value": "[parameters('lsAzureSQL_properties_typeProperties_server')]"
+					},
+					"lsAzureSQL_properties_typeProperties_database": {
+						"value": "[parameters('lsAzureSQL_properties_typeProperties_database')]"
+					},
+					"lsAzureSQL_properties_typeProperties_userName": {
+						"value": "[parameters('lsAzureSQL_properties_typeProperties_userName')]"
+					},
+					"lsdatalake_properties_typeProperties_url": {
+						"value": "[parameters('lsdatalake_properties_typeProperties_url')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
