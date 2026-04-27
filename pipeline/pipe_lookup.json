@@ -1,0 +1,120 @@
+{
+	"name": "pipe_lookup",
+	"properties": {
+		"activities": [
+			{
+				"name": "csv",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "ds_generico_csv",
+						"type": "DatasetReference",
+						"parameters": {
+							"containername": "csvfiles",
+							"filename": "csvCor.csv",
+							"separatorname": ";"
+						}
+					}
+				}
+			},
+			{
+				"name": "Query",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "sql",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT TABLE_SCHEMA , TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' and TABLE_SCHEMA = 'SalesLT'",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_generico_sql",
+						"type": "DatasetReference",
+						"parameters": {
+							"schemaname": "SalesLT",
+							"tablename": "ProductCategory"
+						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "sql",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "csv",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_generico_sql",
+						"type": "DatasetReference",
+						"parameters": {
+							"schemaname": "SalesLT",
+							"tablename": "ProductCategory"
+						}
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "adf_02_activities"
+		},
+		"annotations": [],
+		"lastPublishTime": "2026-04-24T13:13:54Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

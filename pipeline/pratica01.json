@@ -1,0 +1,163 @@
+{
+	"name": "pratica01",
+	"properties": {
+		"activities": [
+			{
+				"name": "ler_csvs",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "ds_generico_csv",
+						"type": "DatasetReference",
+						"parameters": {
+							"containername": "csvfiles",
+							"filename": "*.csv",
+							"separatorname": ";"
+						}
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			},
+			{
+				"name": "filtrar_moviesDB",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "ler_csvs",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('ler_csvs').output.childItems",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@not(equals(item().name,'moviesDB.csv'))",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Lista_csvs",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "filtrar_moviesDB",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('filtrar_moviesDB').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "csv_para_parquet",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "DelimitedTextSource",
+									"storeSettings": {
+										"type": "AzureBlobFSReadSettings",
+										"recursive": true,
+										"enablePartitionDiscovery": false
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings"
+									}
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "ds_generico_csv",
+									"type": "DatasetReference",
+									"parameters": {
+										"containername": "csvfiles",
+										"filename": {
+											"value": "@item().name",
+											"type": "Expression"
+										},
+										"separatorname": ";"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ds_generico_parquet",
+									"type": "DatasetReference",
+									"parameters": {
+										"container_name": "parquetfiles",
+										"file_name": {
+											"value": "@replace(item().name,'.csv','')",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"folder": {
+			"name": "adf_03"
+		},
+		"annotations": [],
+		"lastPublishTime": "2026-04-27T18:32:08Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,110 @@
+{
+	"name": "pipe_wait",
+	"properties": {
+		"activities": [
+			{
+				"name": "metadados",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "ds_generico_csv",
+						"type": "DatasetReference",
+						"parameters": {
+							"containername": "csvfiles",
+							"filename": "*.csv",
+							"separatorname": ";"
+						}
+					},
+					"fieldList": [
+						"itemName",
+						"lastModified",
+						"structure",
+						"exists",
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			},
+			{
+				"name": "csv",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "esperar_10_segundos",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "ds_generico_csv",
+						"type": "DatasetReference",
+						"parameters": {
+							"containername": "csvfiles",
+							"filename": "csvCor.csv",
+							"separatorname": ";"
+						}
+					}
+				}
+			},
+			{
+				"name": "esperar_10_segundos",
+				"type": "Wait",
+				"dependsOn": [
+					{
+						"activity": "metadados",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"waitTimeInSeconds": 10
+				}
+			}
+		],
+		"folder": {
+			"name": "adf_02_activities"
+		},
+		"annotations": [],
+		"lastPublishTime": "2026-04-24T15:04:32Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

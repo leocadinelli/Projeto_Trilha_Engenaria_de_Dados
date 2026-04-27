@@ -1,0 +1,186 @@
+{
+	"name": "pipe_filter",
+	"properties": {
+		"activities": [
+			{
+				"name": "csv",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "ds_generico_csv",
+						"type": "DatasetReference",
+						"parameters": {
+							"containername": "csvfiles",
+							"filename": "csvCor.csv",
+							"separatorname": ";"
+						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "filtro_csv",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "csv",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('csv').output.value",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@not(contains(item().cor,'azul'))",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "sql",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_generico_sql",
+						"type": "DatasetReference",
+						"parameters": {
+							"schemaname": "SalesLT",
+							"tablename": "ProductCategory"
+						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "filtro_sql",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "sql",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('sql').output.value",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@contains(item().Name,'Bike')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "metadados",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "ds_generico_csv",
+						"type": "DatasetReference",
+						"parameters": {
+							"containername": "csvfiles",
+							"filename": "*.csv",
+							"separatorname": ";"
+						}
+					},
+					"fieldList": [
+						"itemName",
+						"lastModified",
+						"structure",
+						"exists",
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			},
+			{
+				"name": "filtro_metadados",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "metadados",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('metadados').output.childItems",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@startswith(item().name,'C')",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "adf_02_activities"
+		},
+		"annotations": [],
+		"lastPublishTime": "2026-04-24T15:04:32Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

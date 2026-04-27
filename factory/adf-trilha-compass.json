@@ -1,0 +1,15 @@
+{
+	"name": "adf-trilha-compass",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Enabled",
+			"editable": true
+		}
+	},
+	"location": "eastus2",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "ada39951-e852-44be-a8c8-2b4c956c1296",
+		"tenantId": "03973fb9-adb2-44bb-ae16-a46a654ddca9"
+	}
+}

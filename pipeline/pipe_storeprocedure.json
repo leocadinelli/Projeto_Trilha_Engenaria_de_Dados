@@ -1,0 +1,66 @@
+{
+	"name": "pipe_storeprocedure",
+	"properties": {
+		"activities": [
+			{
+				"name": "proc_update_dt_insert",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[proc_activity_adf01]"
+				},
+				"linkedServiceName": {
+					"referenceName": "lsAzureSQL",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "proc_update_status",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "proc_update_dt_insert",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[proc_activity_adf02]",
+					"storedProcedureParameters": {
+						"preco": {
+							"value": "50",
+							"type": "Decimal"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "lsAzureSQL",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"folder": {
+			"name": "adf_02_activities"
+		},
+		"annotations": [],
+		"lastPublishTime": "2026-04-24T15:04:32Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
