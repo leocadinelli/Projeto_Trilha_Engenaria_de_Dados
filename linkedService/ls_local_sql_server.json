@@ -1,0 +1,21 @@
+{
+	"name": "ls_local_sql_server",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"server": ".\\SQLEXPRESS",
+			"database": "sqldb-trilha",
+			"encrypt": "mandatory",
+			"trustServerCertificate": true,
+			"authenticationType": "SQL",
+			"userName": "admin",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI1N2FmODMxMS0zZmRjLTQyMjQtYWFlNy1jNDYwNTE2NTRkOTMiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "iradf",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
