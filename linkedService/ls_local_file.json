@@ -5,9 +5,9 @@
 		"annotations": [],
 		"type": "FileServer",
 		"typeProperties": {
-			"host": "d:\\DataBases",
+			"host": "D:\\DataBases",
 			"userId": "admin",
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI4NjJjOTJmZC0yYzdhLTQyM2YtOThjMi0yYjM1YzUwNjNkYmQiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIyMTQzZjMwNy1iY2QwLTQxMDQtYjZiZC1jZTFhY2ZiNTA3ZDgiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
 		},
 		"connectVia": {
 			"referenceName": "iradf",
