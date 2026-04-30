@@ -5,9 +5,9 @@
 		"annotations": [],
 		"type": "FileServer",
 		"typeProperties": {
-			"host": "\\\\DESKTOP-654ONBI\\DataBases",
+			"host": "D:\\",
 			"userId": "\\\\DESKTOP-654ONBI\\Leo",
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJkMjZjZDZmZi02NmI1LTRlMmYtODY5Mi05ZTE0MjI0YjMwNjQiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJlNjBiN2I2Ny0wODA0LTQ5OTUtOWRjZi04YThiMmY0OWYxNGQiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
 		},
 		"connectVia": {
 			"referenceName": "irADF",
