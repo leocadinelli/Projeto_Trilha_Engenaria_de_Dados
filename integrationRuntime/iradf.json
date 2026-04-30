@@ -1,9 +1,0 @@
-{
-	"name": "iradf",
-	"properties": {
-		"type": "SelfHosted",
-		"typeProperties": {
-			"selfContainedInteractiveAuthoringEnabled": false
-		}
-	}
-}
