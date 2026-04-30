@@ -7,11 +7,7 @@
 		"typeProperties": {
 			"host": "D:\\DataBases",
 			"userId": "admin",
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIyMTQzZjMwNy1iY2QwLTQxMDQtYjZiZC1jZTFhY2ZiNTA3ZDgiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
-		},
-		"connectVia": {
-			"referenceName": "iradf",
-			"type": "IntegrationRuntimeReference"
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDYyRDEyNzA3LTgzRTQtNDUxOS05N0FFLTU0RkZERkIxMDA3Rl8zZjVhZTI2OC0xMWJlLTQ0ZDMtOGViNS0wN2EyYjdlNmQ5ZWIiDQp9"
 		}
 	}
 }
