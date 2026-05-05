@@ -11,6 +11,14 @@
 			"type": "secureString",
 			"metadata": "Cadeia segura para \"password\" de \"lsAzureSQL\""
 		},
+		"ls_local_file_password": {
+			"type": "secureString",
+			"metadata": "Cadeia segura para \"password\" de \"ls_local_file\""
+		},
+		"ls_local_sql_server_password": {
+			"type": "secureString",
+			"metadata": "Cadeia segura para \"password\" de \"ls_local_sql_server\""
+		},
 		"lsdatalake_accountKey": {
 			"type": "secureString",
 			"metadata": "Cadeia segura para \"accountKey\" de \"lsdatalake\""
@@ -26,6 +34,26 @@
 		"lsAzureSQL_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "leonardo"
+		},
+		"ls_local_file_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "D:\\DataBases"
+		},
+		"ls_local_file_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "Leo"
+		},
+		"ls_local_sql_server_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": ".\\SQLEXPRESS"
+		},
+		"ls_local_sql_server_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "sqldb-trilha"
+		},
+		"ls_local_sql_server_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "admin"
 		},
 		"lsdatalake_properties_typeProperties_url": {
 			"type": "string",
@@ -64,6 +92,12 @@
 					"lsdatalake_accountKey": {
 						"value": "[parameters('lsdatalake_accountKey')]"
 					},
+					"ls_local_file_password": {
+						"value": "[parameters('ls_local_file_password')]"
+					},
+					"ls_local_sql_server_password": {
+						"value": "[parameters('ls_local_sql_server_password')]"
+					},
 					"lsAzureSQL_properties_typeProperties_server": {
 						"value": "[parameters('lsAzureSQL_properties_typeProperties_server')]"
 					},
@@ -75,10 +109,45 @@
 					},
 					"lsdatalake_properties_typeProperties_url": {
 						"value": "[parameters('lsdatalake_properties_typeProperties_url')]"
+					},
+					"ls_local_file_properties_typeProperties_host": {
+						"value": "[parameters('ls_local_file_properties_typeProperties_host')]"
+					},
+					"ls_local_file_properties_typeProperties_userId": {
+						"value": "[parameters('ls_local_file_properties_typeProperties_userId')]"
+					},
+					"ls_local_sql_server_properties_typeProperties_server": {
+						"value": "[parameters('ls_local_sql_server_properties_typeProperties_server')]"
+					},
+					"ls_local_sql_server_properties_typeProperties_database": {
+						"value": "[parameters('ls_local_sql_server_properties_typeProperties_database')]"
+					},
+					"ls_local_sql_server_properties_typeProperties_userName": {
+						"value": "[parameters('ls_local_sql_server_properties_typeProperties_userName')]"
 					}
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "adf-trilha-compass_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'adf-trilha-compass_ArmTemplate_0')]"
+			]
 		}
 	]
 }

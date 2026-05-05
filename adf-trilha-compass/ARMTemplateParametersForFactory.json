@@ -8,6 +8,12 @@
 		"lsAzureSQL_password": {
 			"value": ""
 		},
+		"ls_local_file_password": {
+			"value": ""
+		},
+		"ls_local_sql_server_password": {
+			"value": ""
+		},
 		"lsdatalake_accountKey": {
 			"value": ""
 		},
@@ -19,6 +25,21 @@
 		},
 		"lsAzureSQL_properties_typeProperties_userName": {
 			"value": "leonardo"
+		},
+		"ls_local_file_properties_typeProperties_host": {
+			"value": "D:\\DataBases"
+		},
+		"ls_local_file_properties_typeProperties_userId": {
+			"value": "Leo"
+		},
+		"ls_local_sql_server_properties_typeProperties_server": {
+			"value": ".\\SQLEXPRESS"
+		},
+		"ls_local_sql_server_properties_typeProperties_database": {
+			"value": "sqldb-trilha"
+		},
+		"ls_local_sql_server_properties_typeProperties_userName": {
+			"value": "admin"
 		},
 		"lsdatalake_properties_typeProperties_url": {
 			"value": "https://dlstrilhacompass.dfs.core.windows.net/"

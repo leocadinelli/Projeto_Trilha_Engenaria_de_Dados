@@ -11,6 +11,14 @@
 			"type": "secureString",
 			"metadata": "Cadeia segura para \"password\" de \"lsAzureSQL\""
 		},
+		"ls_local_file_password": {
+			"type": "secureString",
+			"metadata": "Cadeia segura para \"password\" de \"ls_local_file\""
+		},
+		"ls_local_sql_server_password": {
+			"type": "secureString",
+			"metadata": "Cadeia segura para \"password\" de \"ls_local_sql_server\""
+		},
 		"lsdatalake_accountKey": {
 			"type": "secureString",
 			"metadata": "Cadeia segura para \"accountKey\" de \"lsdatalake\""
@@ -26,6 +34,26 @@
 		"lsAzureSQL_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "leonardo"
+		},
+		"ls_local_file_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "D:\\DataBases"
+		},
+		"ls_local_file_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "Leo"
+		},
+		"ls_local_sql_server_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": ".\\SQLEXPRESS"
+		},
+		"ls_local_sql_server_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "sqldb-trilha"
+		},
+		"ls_local_sql_server_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "admin"
 		},
 		"lsdatalake_properties_typeProperties_url": {
 			"type": "string",
@@ -702,6 +730,32 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_generico_csv')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipe_github')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Wait_git",
+						"type": "Wait",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"waitTimeInSeconds": 1
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "adf_04_git"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/pipe_lookup')]",
@@ -1696,6 +1750,82 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_local_file')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_local_file",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"filename": {
+						"type": "string"
+					},
+					"fileseparatort": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "FileServerLocation",
+						"fileName": {
+							"value": "@dataset().filename",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": {
+						"value": "@dataset().fileseparatort",
+						"type": "Expression"
+					},
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_local_file')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_sqlserver_local')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_local_sql_server",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"schema_name": {
+						"type": "string"
+					},
+					"table_name": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().schema_name",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().table_name",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_local_sql_server')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/lsAzureSQL')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -1718,6 +1848,58 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ls_local_file')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "FileServer",
+				"typeProperties": {
+					"host": "[parameters('ls_local_file_properties_typeProperties_host')]",
+					"userId": "[parameters('ls_local_file_properties_typeProperties_userId')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('ls_local_file_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "irADF",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/irADF')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_local_sql_server')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"server": "[parameters('ls_local_sql_server_properties_typeProperties_server')]",
+					"database": "[parameters('ls_local_sql_server_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": true,
+					"authenticationType": "SQL",
+					"userName": "[parameters('ls_local_sql_server_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('ls_local_sql_server_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "irADF",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/irADF')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/lsdatalake')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -1730,6 +1912,18 @@
 						"type": "SecureString",
 						"value": "[parameters('lsdatalake_accountKey')]"
 					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/irADF')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "SelfHosted",
+				"typeProperties": {
+					"selfContainedInteractiveAuthoringEnabled": false
 				}
 			},
 			"dependsOn": []
